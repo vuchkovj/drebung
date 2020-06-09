@@ -7,49 +7,64 @@
   <title>Дребунг</title>
   <style>
     body {
-      background-color: darkseagreen;
-      width: 428px;
+      background-color: #516606;
+      width: 100%;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .params {
+      width: 100%;
     }
 
     .inputParam {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex;
       margin: 1rem;
-      align-items: baseline;
+      align-items: center;
     }
 
     .inputParam * {
       height: 2rem;
       width: 5rem;
-
       padding: 5px;
     }
 
     .output {
       margin: 1rem;
       display: flex;
-      flex-flow: row-reverse;
 
     }
 
     #output {
-      width: 5rem;
+      width: 10rem;
+      height: 3.5rem;
+      font-size: xxx-large;
     }
   </style>
   <script>
-    window.oninput = function () {
-      let rpm = document.getElementById('rpm').value;
-      let s = document.getElementById('s').value;
-      let length = document.getElementById('length').value;
-      let output = document.getElementById('output');
+    var compute = function() {
+        const DEFAULT_OUTPUT = '--:--'
+        let rpm = document.getElementById('rpm').value;
+        let s = document.getElementById('s').value;
+        let length = document.getElementById('length').value;
+        let output = document.getElementById('output');
 
-      if (rpm && s && length) {
-        result = output.innerHTML = length / (rpm * s);
-        output.innerHTML = getTime(result);
-      } else {
-        output.innerHTML = '';
-      }
-    };
+        output.innerHTML = DEFAULT_OUTPUT;
+
+        if (rpm && s && length) {
+          try {
+            let result = output.innerHTML = length / (rpm * s);
+            if (!isFinite(result)){
+              throw 'Infinity'
+            }
+            output.innerHTML = getTime(result);
+          } catch(_) {
+            output.innerHTML = DEFAULT_OUTPUT;
+          }
+        }
+      };
+
 
     getTime = result => {
       hours = Math.floor(result / 60);
@@ -64,22 +79,25 @@
       return output;
     };
 
-  </script>
+
+    window.onload = compute;
+    window.oninput = compute;
+</script>
 </head>
 
 <body>
   <div class="params">
     <div class="inputParam">
-      <label for="rpm">Вртежи во минута: </label>
       <input id="rpm" type="number"><br>
+      <label for="rpm">Вртежи во минута</label>
     </div>
     <div class="inputParam">
-      <label for="s">Помест: </label>
       <input id="s" type="number"><br>
+      <label for="s">Помест</label>
     </div>
     <div class="inputParam">
-      <label for="length">Должина на парче: </label>
       <input id="length" type="number"><br>
+      <label for="length">Должина на парче</label>
     </div>
     <hr>
   </div>
